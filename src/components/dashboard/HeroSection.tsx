@@ -53,31 +53,31 @@ const HeroSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="order-2 lg:order-1 animate-fade-in-up">
             <div className="inline-block mb-2 px-3 py-1 rounded-full bg-cyber-accent/10 text-cyber-accent text-sm font-medium">
-              Cybersecurity Career Roadmap
+              Enterprise Cybersecurity Framework
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-cyber-navy leading-tight">
-              Master Cybersecurity Skills with Clarity
+              Mature Your Organization's Security Posture
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-xl">
-              Navigate the complex world of cybersecurity with our intuitive roadmap. Track your progress, discover learning resources, and advance your security career.
+              Navigate the complex landscape of enterprise security with our comprehensive framework. Implement controls, measure maturity, and strengthen your organization's resilience.
             </p>
             
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="group">
-                Explore Roadmap 
+              <Button size="lg" className="group bg-cyber-navy text-white hover:bg-cyber-navy/90">
+                Explore Framework
                 <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
-              <Button size="lg" variant="outline">
-                View Resources
+              <Button size="lg" variant="outline" className="border-cyber-navy text-cyber-navy hover:bg-cyber-navy/5">
+                Request Assessment
               </Button>
             </div>
             
             <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-8">
               {[
-                { icon: ShieldCheck, label: "Defense", value: "12 Skills" },
-                { icon: Server, label: "Infrastructure", value: "8 Skills" },
-                { icon: Database, label: "Data Security", value: "9 Skills" },
-                { icon: Lock, label: "Access Control", value: "6 Skills" },
+                { icon: ShieldCheck, label: "Controls", value: "12 Domains" },
+                { icon: Server, label: "Infrastructure", value: "8 Controls" },
+                { icon: Database, label: "Data Security", value: "9 Controls" },
+                { icon: Lock, label: "Access Management", value: "6 Controls" },
               ].map((item, index) => (
                 <div 
                   key={index} 
@@ -102,11 +102,11 @@ const HeroSection = () => {
             <div className="relative z-10 bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100 animate-scale-in">
               <div className="bg-cyber-teal h-2"></div>
               <div className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Cybersecurity Skill Map</h2>
+                <h2 className="text-xl font-semibold mb-4">Security Posture Overview</h2>
                 <div className="space-y-4">
                   {[
                     { name: "Network Security", progress: 75 },
-                    { name: "Penetration Testing", progress: 45 },
+                    { name: "Identity & Access", progress: 45 },
                     { name: "Security Architecture", progress: 60 },
                     { name: "Threat Intelligence", progress: 30 },
                     { name: "Incident Response", progress: 90 },

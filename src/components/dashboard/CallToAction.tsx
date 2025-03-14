@@ -19,17 +19,17 @@ const CallToAction = () => {
             <Shield className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-            Start Your Cybersecurity Journey Today
+            Strengthen Your Security Posture Today
           </h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-8">
-            Create your personalized learning path, track your progress, and connect with resources that will help you grow your cybersecurity career.
+            Deploy comprehensive security controls, mature your organization's security posture, and ensure resilience against evolving threats.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button 
               size="lg" 
               className="bg-white text-cyber-navy hover:bg-gray-100 group"
             >
-              Create Your Roadmap
+              Request Assessment
               <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Button>
             <Button 
@@ -37,7 +37,7 @@ const CallToAction = () => {
               variant="outline" 
               className="text-white border-white hover:bg-white/10"
             >
-              Explore Resources
+              Explore Framework
             </Button>
           </div>
         </div>
