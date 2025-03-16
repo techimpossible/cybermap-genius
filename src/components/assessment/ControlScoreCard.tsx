@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle2, Clock, CalendarClock } from "lucide-react";
+import { CheckCircle2, Clock, CalendarClock, AlertCircle } from "lucide-react";
 import { useAssessment, SecurityControl } from "@/contexts/AssessmentContext";
 import { toast } from "sonner";
 
@@ -25,7 +25,7 @@ const ControlScoreCard: React.FC<ControlScoreCardProps> = ({ control }) => {
   };
   
   const handleStatusChange = (value: string) => {
-    updateControlStatus(control.id, value as "implemented" | "in-progress" | "planned");
+    updateControlStatus(control.id, value as "implemented" | "in-progress" | "planned" | "not-implemented");
     toast.success(`Status updated for ${control.id}`);
   };
   
@@ -43,6 +43,8 @@ const ControlScoreCard: React.FC<ControlScoreCardProps> = ({ control }) => {
         return <Clock className="h-4 w-4 text-amber-500" />;
       case "planned":
         return <CalendarClock className="h-4 w-4 text-blue-500" />;
+      case "not-implemented":
+        return <AlertCircle className="h-4 w-4 text-red-500" />;
       default:
         return null;
     }
@@ -56,6 +58,8 @@ const ControlScoreCard: React.FC<ControlScoreCardProps> = ({ control }) => {
         return "text-amber-500";
       case "planned":
         return "text-blue-500";
+      case "not-implemented":
+        return "text-red-500";
       default:
         return "text-gray-500";
     }
@@ -89,6 +93,7 @@ const ControlScoreCard: React.FC<ControlScoreCardProps> = ({ control }) => {
               {control.status === "implemented" && "Implemented"}
               {control.status === "in-progress" && "In Progress"}
               {control.status === "planned" && "Planned"}
+              {control.status === "not-implemented" && "Not Implemented"}
             </span>
           </div>
           <span className="text-sm font-mono bg-gray-100 px-2 py-0.5 rounded">
@@ -147,6 +152,7 @@ const ControlScoreCard: React.FC<ControlScoreCardProps> = ({ control }) => {
                 <SelectItem value="implemented">Implemented</SelectItem>
                 <SelectItem value="in-progress">In Progress</SelectItem>
                 <SelectItem value="planned">Planned</SelectItem>
+                <SelectItem value="not-implemented">Not Implemented</SelectItem>
               </SelectContent>
             </Select>
           </div>
