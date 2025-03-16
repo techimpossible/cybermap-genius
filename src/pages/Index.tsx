@@ -12,6 +12,9 @@ import PageTransition from "@/components/common/PageTransition";
 const Index = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
+    
+    // Set page title to reflect the combined frameworks
+    document.title = "SecureSphere | CIS v8 & NIST 800-53 Security Framework";
   }, []);
 
   return (

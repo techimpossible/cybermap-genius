@@ -53,13 +53,13 @@ const HeroSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="order-2 lg:order-1 animate-fade-in-up">
             <div className="inline-block mb-2 px-3 py-1 rounded-full bg-cyber-accent/10 text-cyber-accent text-sm font-medium">
-              CIS Controls Version 8
+              Integrated Security Frameworks
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-cyber-navy leading-tight">
               Mature Your Organization's Security Posture
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-xl">
-              Implement the CIS Critical Security Controls v8 framework to establish, measure, and enhance your organization's cybersecurity maturity across all domains.
+              Implement a unified approach combining CIS Controls v8 and NIST SP 800-53 to establish, measure, and enhance your organization's cybersecurity maturity across all domains.
             </p>
             
             <div className="flex flex-wrap gap-4">
@@ -74,10 +74,10 @@ const HeroSection = () => {
             
             <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-8">
               {[
-                { icon: ShieldCheck, label: "Implementation Groups", value: "3 Groups" },
-                { icon: Server, label: "Safeguards", value: "153 Controls" },
-                { icon: Database, label: "Control Categories", value: "18 Categories" },
-                { icon: Lock, label: "Security Functions", value: "4 Functions" },
+                { icon: ShieldCheck, label: "CIS Implementation Groups", value: "3 Groups" },
+                { icon: Server, label: "NIST Controls", value: "1,189 Controls" },
+                { icon: Database, label: "Framework Categories", value: "20 Families" },
+                { icon: Lock, label: "Security Functions", value: "5 Functions" },
               ].map((item, index) => (
                 <div 
                   key={index} 
@@ -102,14 +102,14 @@ const HeroSection = () => {
             <div className="relative z-10 bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100 animate-scale-in">
               <div className="bg-cyber-teal h-2"></div>
               <div className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Security Posture Overview</h2>
+                <h2 className="text-xl font-semibold mb-4">Security Framework Coverage</h2>
                 <div className="space-y-4">
                   {[
-                    { name: "Account & Access Management", progress: 75 },
-                    { name: "Data Protection", progress: 45 },
-                    { name: "Device Security", progress: 60 },
-                    { name: "Network Infrastructure", progress: 30 },
-                    { name: "Incident Response", progress: 90 },
+                    { name: "Identify", progress: 75 },
+                    { name: "Protect", progress: 65 },
+                    { name: "Detect", progress: 60 },
+                    { name: "Respond", progress: 45 },
+                    { name: "Recover", progress: 30 },
                   ].map((skill, index) => (
                     <div key={index} className="space-y-2">
                       <div className="flex justify-between">
