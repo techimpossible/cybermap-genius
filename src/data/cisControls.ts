@@ -776,3 +776,17 @@ export const cisControls: SecurityControl[] = [
     score: 0,
     framework: "CIS"
   },
+  
+  // CIS Control 18: Penetration Testing
+  {
+    id: "CIS-18.5",
+    name: "Perform Periodic Internal Penetration Tests",
+    description: "Perform periodic internal penetration tests based on program requirements, no less than annually.",
+    nistMapping: ["CA-8", "RA-5"],
+    implementationLevel: "IG3",
+    category: "18. Penetration Testing",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  }
+];
