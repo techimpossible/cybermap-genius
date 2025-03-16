@@ -767,4 +767,303 @@ export const cisControls: SecurityControl[] = [
     id: "CIS-7.9",
     name: "Implement a Patch Management Solution",
     description: "Implement a solution to automate the identification and remediation of vulnerabilities for the internal enterprise environment.",
-    nistMapping: ["SI-2", "SI-2(1)", "SI
+    nistMapping: ["SI-2", "SI-2(1)", "SI-2(3)"],
+    implementationLevel: "IG3",
+    category: "7. Continuous Vulnerability Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  
+  // CIS Control 8: Audit Log Management
+  {
+    id: "CIS-8.1",
+    name: "Establish and Maintain an Audit Log Management Process",
+    description: "Establish and maintain an audit log management process that defines the enterprise's logging requirements.",
+    nistMapping: ["AU-1", "AU-2"],
+    implementationLevel: "IG1",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.2",
+    name: "Collect Audit Logs",
+    description: "Collect audit logs from enterprise assets and software where possible and appropriate.",
+    nistMapping: ["AU-3", "AU-12"],
+    implementationLevel: "IG1",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.3",
+    name: "Ensure Adequate Audit Log Storage",
+    description: "Ensure that logging destinations maintain adequate storage to comply with the enterprise's audit log management process.",
+    nistMapping: ["AU-4"],
+    implementationLevel: "IG1",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.4",
+    name: "Standardize Time Synchronization",
+    description: "Standardize time synchronization using an authoritative time source across all enterprise assets.",
+    nistMapping: ["AU-8", "AU-8(1)"],
+    implementationLevel: "IG1",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.5",
+    name: "Collect Detailed Audit Logs",
+    description: "Configure detailed audit logging for enterprise assets containing sensitive data.",
+    nistMapping: ["AU-3", "AU-12"],
+    implementationLevel: "IG2",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.6",
+    name: "Collect DNS Query Audit Logs",
+    description: "Collect DNS query audit logs on enterprise assets, where appropriate and supported.",
+    nistMapping: ["SI-4"],
+    implementationLevel: "IG2",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.7",
+    name: "Collect URL Request Audit Logs",
+    description: "Collect URL request audit logs on enterprise assets, where appropriate and supported.",
+    nistMapping: ["SI-4"],
+    implementationLevel: "IG2",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.8",
+    name: "Collect Command-Line Audit Logs",
+    description: "Collect command-line audit logs for all command shell activity.",
+    nistMapping: ["AU-12"],
+    implementationLevel: "IG2",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.9",
+    name: "Centralize Audit Logs",
+    description: "Centralize, to the extent possible, audit log collection and retention from enterprise assets and software.",
+    nistMapping: ["AU-6(4)"],
+    implementationLevel: "IG2",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.10",
+    name: "Retain Audit Logs",
+    description: "Retain audit logs across enterprise assets for a minimum of 90 days.",
+    nistMapping: ["AU-11"],
+    implementationLevel: "IG2",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.11",
+    name: "Conduct Audit Log Reviews",
+    description: "Conduct reviews of audit logs to detect anomalies or abnormal events.",
+    nistMapping: ["AU-6", "SI-4"],
+    implementationLevel: "IG2",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.12",
+    name: "Collect Service Provider Logs",
+    description: "Collect service provider logs, where supported.",
+    nistMapping: ["SA-9(2)"],
+    implementationLevel: "IG3",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  
+  // CIS Control 9: Email and Web Browser Protections
+  {
+    id: "CIS-9.1",
+    name: "Ensure Use of Only Fully Supported Browsers and Email Clients",
+    description: "Ensure only fully supported browsers and email clients are allowed to execute in the enterprise, preferably only using the latest version of the browsers and email clients provided by the vendor.",
+    nistMapping: ["CM-7", "SI-2"],
+    implementationLevel: "IG1",
+    category: "9. Email and Web Browser Protections",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-9.2",
+    name: "Use DNS Filtering Services",
+    description: "Use DNS filtering services on all enterprise assets to block access to known malicious domains.",
+    nistMapping: ["SC-7", "SI-3"],
+    implementationLevel: "IG1",
+    category: "9. Email and Web Browser Protections",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-9.3",
+    name: "Maintain and Enforce Network-Based URL Filters",
+    description: "Enforce and update network-based URL filters to limit an enterprise asset from connecting to potentially malicious or unapproved websites.",
+    nistMapping: ["SC-7", "SI-3"],
+    implementationLevel: "IG1",
+    category: "9. Email and Web Browser Protections",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-9.4",
+    name: "Restrict Unnecessary or Unauthorized Browser and Email Client Extensions",
+    description: "Restrict unauthorized browser and email client extensions.",
+    nistMapping: ["CM-7"],
+    implementationLevel: "IG2",
+    category: "9. Email and Web Browser Protections",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-9.5",
+    name: "Implement DMARC",
+    description: "Implement Domain-based Message Authentication, Reporting, and Conformance (DMARC) to prevent spoofed emails.",
+    nistMapping: ["SC-8", "SI-8"],
+    implementationLevel: "IG2",
+    category: "9. Email and Web Browser Protections",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-9.6",
+    name: "Block Unnecessary File Types",
+    description: "Block unnecessary file types attempting to enter the enterprise's email gateway.",
+    nistMapping: ["SC-7", "SI-3"],
+    implementationLevel: "IG2",
+    category: "9. Email and Web Browser Protections",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-9.7",
+    name: "Deploy and Maintain Email Server Anti-Malware Protections",
+    description: "Deploy and maintain email server anti-malware protections, such as attachment scanning and/or sandboxing.",
+    nistMapping: ["SI-3", "SI-8"],
+    implementationLevel: "IG2",
+    category: "9. Email and Web Browser Protections",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  
+  // CIS Control 10: Malware Defenses
+  {
+    id: "CIS-10.1",
+    name: "Deploy and Maintain Anti-Malware Software",
+    description: "Deploy and maintain anti-malware software on all enterprise assets.",
+    nistMapping: ["SI-3"],
+    implementationLevel: "IG1",
+    category: "10. Malware Defenses",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-10.2",
+    name: "Configure Automatic Anti-Malware Signature Updates",
+    description: "Configure automatic updates for anti-malware signature files on all enterprise assets.",
+    nistMapping: ["SI-3"],
+    implementationLevel: "IG1",
+    category: "10. Malware Defenses",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-10.3",
+    name: "Disable Autorun and Autoplay for Removable Media",
+    description: "Disable autorun and autoplay auto-execute functionality for removable media.",
+    nistMapping: ["CM-7"],
+    implementationLevel: "IG1",
+    category: "10. Malware Defenses",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-10.4",
+    name: "Configure Automatic Anti-Malware Scanning of Removable Media",
+    description: "Configure anti-malware software to automatically scan removable media.",
+    nistMapping: ["SI-3"],
+    implementationLevel: "IG1",
+    category: "10. Malware Defenses",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-10.5",
+    name: "Enable Anti-Exploitation Features",
+    description: "Enable anti-exploitation features on enterprise assets and software, where possible, such as Microsoft® Data Execution Prevention (DEP), Windows® Defender Exploit Guard (WDEG), or Apple® System Integrity Protection (SIP) and Gatekeeper™.",
+    nistMapping: ["SI-16"],
+    implementationLevel: "IG1",
+    category: "10. Malware Defenses",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-10.6",
+    name: "Centrally Manage Anti-Malware Software",
+    description: "Centrally manage anti-malware software.",
+    nistMapping: ["SI-3"],
+    implementationLevel: "IG2",
+    category: "10. Malware Defenses",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-10.7",
+    name: "Use Behavior-Based Anti-Malware Software",
+    description: "Use behavior-based anti-malware software.",
+    nistMapping: ["SI-3", "SI-4"],
+    implementationLevel: "IG2",
+    category: "10. Malware Defenses",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  }
+];
