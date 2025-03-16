@@ -1,7 +1,6 @@
 
 import React, { useEffect, useRef } from "react";
-import { ArrowRight, ShieldCheck, Server, Database, Lock } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ShieldCheck, Server, Database, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const HeroSection = () => {
@@ -61,16 +60,6 @@ const HeroSection = () => {
             <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-xl">
               Implement a unified approach combining CIS Controls v8 and NIST SP 800-53 to establish, measure, and enhance your organization's cybersecurity maturity across all domains.
             </p>
-            
-            <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="group bg-cyber-navy text-white hover:bg-cyber-navy/90">
-                Explore Framework
-                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-              <Button size="lg" variant="outline" className="border-cyber-navy text-cyber-navy hover:bg-cyber-navy/5">
-                Request Assessment
-              </Button>
-            </div>
             
             <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-8">
               {[
