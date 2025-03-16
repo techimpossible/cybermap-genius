@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,6 +10,7 @@ import PageTransition from "@/components/common/PageTransition";
 import { useAssessment } from "@/contexts/AssessmentContext";
 import ControlScoreCard from "@/components/assessment/ControlScoreCard";
 import AssessmentActions from "@/components/assessment/AssessmentActions";
+import { Badge } from "@/components/ui/badge";
 
 const Controls = () => {
   useEffect(() => {
@@ -18,9 +19,13 @@ const Controls = () => {
   }, []);
 
   const { controls } = useAssessment();
+  const [framework, setFramework] = useState<"CIS" | "NIST">("CIS");
+  
+  // Filter controls by framework
+  const frameworkControls = controls.filter(control => control.framework === framework);
 
   // Group controls by category
-  const controlsByGroup = controls.reduce<Record<string, typeof controls>>((acc, control) => {
+  const controlsByGroup = frameworkControls.reduce<Record<string, typeof controls>>((acc, control) => {
     const category = control.category;
     if (!acc[category]) {
       acc[category] = [];
@@ -38,9 +43,38 @@ const Controls = () => {
             <div className="max-w-4xl mx-auto">
               <h1 className="text-3xl md:text-4xl font-bold mb-6 text-cyber-navy">Security Controls Assessment</h1>
               <p className="text-lg text-gray-600 mb-6">
-                Score and assess your implementation of CIS Controls v8 mapped to NIST SP 800-53 security controls. 
+                Score and assess your implementation of security controls. 
                 Track your progress and identify areas for improvement.
               </p>
+
+              <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex gap-2">
+                  <Badge variant="outline" className="text-md py-2 px-4 border-2 border-blue-700 bg-blue-50">
+                    Framework: {framework}
+                  </Badge>
+                  <Badge variant="outline" className="text-md py-2 px-4">
+                    Controls: {frameworkControls.length}
+                  </Badge>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-500">Select Framework:</span>
+                  <div className="flex rounded-md overflow-hidden border">
+                    <button 
+                      className={`px-3 py-1 text-sm font-medium ${framework === "CIS" ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+                      onClick={() => setFramework("CIS")}
+                    >
+                      CIS v8
+                    </button>
+                    <button 
+                      className={`px-3 py-1 text-sm font-medium ${framework === "NIST" ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+                      onClick={() => setFramework("NIST")}
+                    >
+                      NIST 800-53
+                    </button>
+                  </div>
+                </div>
+              </div>
 
               <Alert className="mb-8 bg-blue-50 border-blue-200">
                 <AlertCircle className="h-5 w-5 text-blue-600" />
@@ -72,6 +106,7 @@ const Controls = () => {
                         <AccordionTrigger className="px-6 py-4 bg-gray-50 hover:bg-gray-100">
                           <div className="flex items-center gap-3">
                             <span className="font-medium text-lg">{category}</span>
+                            <Badge>{controls.length}</Badge>
                           </div>
                         </AccordionTrigger>
                         <AccordionContent className="px-6 py-3">
@@ -88,7 +123,7 @@ const Controls = () => {
 
                 <TabsContent value="implemented" className="space-y-6">
                   <div className="space-y-4">
-                    {controls
+                    {frameworkControls
                       .filter(control => control.status === "implemented")
                       .map(control => (
                         <ControlScoreCard key={control.id} control={control} />
@@ -98,7 +133,7 @@ const Controls = () => {
 
                 <TabsContent value="in-progress" className="space-y-6">
                   <div className="space-y-4">
-                    {controls
+                    {frameworkControls
                       .filter(control => control.status === "in-progress")
                       .map(control => (
                         <ControlScoreCard key={control.id} control={control} />
@@ -108,7 +143,7 @@ const Controls = () => {
 
                 <TabsContent value="planned" className="space-y-6">
                   <div className="space-y-4">
-                    {controls
+                    {frameworkControls
                       .filter(control => control.status === "planned")
                       .map(control => (
                         <ControlScoreCard key={control.id} control={control} />
