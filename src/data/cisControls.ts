@@ -715,4 +715,64 @@ export const cisControls: SecurityControl[] = [
     nistMapping: ["SI-2", "SI-2(3)", "SI-2(4)", "SI-2(5)"],
     implementationLevel: "IG1",
     category: "7. Continuous Vulnerability Management",
-    status
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-7.5",
+    name: "Perform Automated Vulnerability Scans",
+    description: "Perform automated vulnerability scans of enterprise assets on a monthly, or more frequent, basis.",
+    nistMapping: ["RA-5"],
+    implementationLevel: "IG2",
+    category: "7. Continuous Vulnerability Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-7.6",
+    name: "Automate Application Patch Management for End-User Devices",
+    description: "Automate application patch management for end-user devices.",
+    nistMapping: ["SI-2", "SI-2(3)", "SI-2(4)", "SI-2(5)"],
+    implementationLevel: "IG2",
+    category: "7. Continuous Vulnerability Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-7.7",
+    name: "Compare Backups to Vulnerability Scans",
+    description: "Compare backups to vulnerability scans to ensure backups do not contain known vulnerabilities.",
+    nistMapping: ["CP-9", "RA-5"],
+    implementationLevel: "IG3",
+    category: "7. Continuous Vulnerability Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  
+  // CIS Control 8: Audit Log Management
+  {
+    id: "CIS-8.1",
+    name: "Establish and Maintain an Audit Log Management Process",
+    description: "Establish and maintain an audit log management process for enterprise assets. Review and update documentation annually, or when significant enterprise changes occur that could impact this Safeguard.",
+    nistMapping: ["AU-1", "AU-2", "AU-6"],
+    implementationLevel: "IG1",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
+  {
+    id: "CIS-8.2",
+    name: "Establish and Maintain an Audit Log Reduction and Centralization Process",
+    description: "Establish and maintain a process to reduce and centralize audit logs for enterprise assets.",
+    nistMapping: ["AU-6"],
+    implementationLevel: "IG1",
+    category: "8. Audit Log Management",
+    status: "planned",
+    score: 0,
+    framework: "CIS"
+  },
