@@ -8,12 +8,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, BarChart as RechartsBarChart, RadarChart, PolarGrid, PolarAngleAxis, Radar, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Pie } from "recharts";
 import { Shield, TrendingUp, AlertCircle, Target, BarChart } from "lucide-react";
 import PageTransition from "@/components/common/PageTransition";
+import { useAssessment } from "@/contexts/AssessmentContext";
 
 const Maturity = () => {
+  const { getOverallScore, getImplementationGroupProgress, getControlsByStatus, controls } = useAssessment();
+  
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = "Security Maturity | CIS v8 & NIST 800-53";
   }, []);
+
+  const overallScore = getOverallScore();
+  const implementationGroupProgress = getImplementationGroupProgress();
+  const pieData = getControlsByStatus();
 
   const radarData = [
     { subject: 'Identify', A: 70, fullMark: 100 },
@@ -31,49 +38,43 @@ const Maturity = () => {
     { id: 5, name: "Optimizing", description: "Continuous process improvement", score: 1.3, maxScore: 5 },
   ];
 
-  const implementationGroupProgress = [
-    { name: "IG1 - Basic", percentage: 85, color: "#10b981" },
-    { name: "IG2 - Foundational", percentage: 62, color: "#3b82f6" },
-    { name: "IG3 - Organizational", percentage: 28, color: "#8b5cf6" },
-  ];
+  // Prepare data for control families chart based on real assessment data
+  const controlFamiliesData = Object.entries(
+    controls.reduce<Record<string, {count: number, score: number}>>((acc, control) => {
+      if (!acc[control.category]) {
+        acc[control.category] = { count: 0, score: 0 };
+      }
+      acc[control.category].count++;
+      acc[control.category].score += control.score || 0;
+      return acc;
+    }, {})
+  ).map(([name, data]) => ({
+    name,
+    implementation: Math.round((data.score / (data.count * 5)) * 100)
+  }));
 
-  const controlFamiliesData = [
-    { name: "Access Control", implementation: 75 },
-    { name: "Awareness & Training", implementation: 68 },
-    { name: "Audit & Accountability", implementation: 82 },
-    { name: "Configuration Management", implementation: 58 },
-    { name: "Identification & Authentication", implementation: 71 },
-    { name: "Incident Response", implementation: 64 },
-    { name: "Risk Assessment", implementation: 52 },
-    { name: "System & Communications Protection", implementation: 48 },
-  ];
+  // Calculate CIS Controls data based on control IDs
+  const cisControlMap = controls.reduce<Record<string, {count: number, score: number}>>((acc, control) => {
+    const cisNumber = control.id.split('-')[0] + '-' + control.id.split('-')[1].split('.')[0];
+    if (!acc[cisNumber]) {
+      acc[cisNumber] = { count: 0, score: 0 };
+    }
+    acc[cisNumber].count++;
+    acc[cisNumber].score += control.score || 0;
+    return acc;
+  }, {});
 
-  const cisControlsData = [
-    { name: "CIS 1", value: 85 },
-    { name: "CIS 2", value: 72 },
-    { name: "CIS 3", value: 61 },
-    { name: "CIS 4", value: 58 },
-    { name: "CIS 5", value: 82 },
-    { name: "CIS 6", value: 67 },
-    { name: "CIS 7", value: 42 },
-    { name: "CIS 8", value: 56 },
-    { name: "CIS 9", value: 73 },
-    { name: "CIS 10", value: 61 },
-    { name: "CIS 11", value: 45 },
-    { name: "CIS 12", value: 38 },
-    { name: "CIS 13", value: 31 },
-    { name: "CIS 14", value: 79 },
-    { name: "CIS 15", value: 51 },
-    { name: "CIS 16", value: 35 },
-    { name: "CIS 17", value: 43 },
-    { name: "CIS 18", value: 28 },
-  ];
-
-  const pieData = [
-    { name: "Implemented", value: 58, color: "#10b981" },
-    { name: "In Progress", value: 27, color: "#f59e0b" },
-    { name: "Planned", value: 15, color: "#3b82f6" },
-  ];
+  const cisControlsData = Object.entries(cisControlMap)
+    .map(([name, data]) => ({
+      name: name.replace('CIS-', 'CIS '),
+      value: Math.round((data.score / (data.count * 5)) * 100)
+    }))
+    .sort((a, b) => {
+      // Sort by CIS control number
+      const aNum = parseInt(a.name.split(' ')[1]);
+      const bNum = parseInt(b.name.split(' ')[1]);
+      return aNum - bNum;
+    });
 
   return (
     <PageTransition>
@@ -117,10 +118,10 @@ const Maturity = () => {
                       <CardContent>
                         <div className="flex justify-center items-center h-40">
                           <div className="text-center">
-                            <div className="text-5xl font-bold text-cyber-navy">3.2</div>
+                            <div className="text-5xl font-bold text-cyber-navy">{overallScore}</div>
                             <div className="text-gray-500 mt-2">out of 5.0</div>
                             <div className="mt-4 w-full">
-                              <Progress value={64} className="h-2" />
+                              <Progress value={overallScore / 5 * 100} className="h-2" />
                             </div>
                           </div>
                         </div>
@@ -213,7 +214,7 @@ const Maturity = () => {
                               <span className="font-medium">{group.name}</span>
                               <span className="text-gray-500">{group.percentage}%</span>
                             </div>
-                            <Progress value={group.percentage} className="h-2" indicatorClassName={`bg-[${group.color}]`} />
+                            <Progress value={group.percentage} className="h-2" />
                           </div>
                         ))}
                       </div>
@@ -362,7 +363,12 @@ const Maturity = () => {
                               <XAxis dataKey="name" />
                               <YAxis />
                               <Tooltip 
-                                formatter={(value, name) => [value, name.charAt(0).toUpperCase() + name.slice(1)]}
+                                formatter={(value, name) => {
+                                  if (typeof name === 'string') {
+                                    return [value, name.charAt(0).toUpperCase() + name.slice(1)];
+                                  }
+                                  return [value, name];
+                                }}
                                 contentStyle={{ 
                                   background: "rgba(255, 255, 255, 0.9)",
                                   border: "none",
@@ -397,8 +403,7 @@ const Maturity = () => {
                                 </div>
                                 <Progress 
                                   value={control.value} 
-                                  className="h-2" 
-                                  indicatorClassName={control.value >= 75 ? 'bg-green-500' : 'bg-amber-500'} 
+                                  className="h-2"
                                 />
                               </div>
                             ))}
@@ -511,8 +516,7 @@ const Maturity = () => {
                               </div>
                               <Progress 
                                 value={item.A} 
-                                className="h-2" 
-                                indicatorClassName={item.A >= 75 ? 'bg-green-500' : item.A >= 50 ? 'bg-amber-500' : 'bg-red-500'} 
+                                className="h-2"
                               />
                             </div>
                           ))}
@@ -537,7 +541,7 @@ const Maturity = () => {
                               { name: 'Q2 2023', score: 2.7 },
                               { name: 'Q3 2023', score: 2.9 },
                               { name: 'Q4 2023', score: 3.1 },
-                              { name: 'Q1 2024', score: 3.2 },
+                              { name: 'Q1 2024', score: overallScore },
                             ]}
                             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                           >
@@ -575,7 +579,12 @@ const Maturity = () => {
                                 { name: 'Q2 2023', implemented: 41, inProgress: 22, planned: 37 },
                                 { name: 'Q3 2023', implemented: 47, inProgress: 28, planned: 25 },
                                 { name: 'Q4 2023', implemented: 52, inProgress: 30, planned: 18 },
-                                { name: 'Q1 2024', implemented: 58, inProgress: 27, planned: 15 },
+                                { 
+                                  name: 'Q1 2024', 
+                                  implemented: pieData[0].value,
+                                  inProgress: pieData[1].value, 
+                                  planned: pieData[2].value 
+                                },
                               ]}
                               margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                             >
@@ -583,7 +592,12 @@ const Maturity = () => {
                               <XAxis dataKey="name" />
                               <YAxis tickFormatter={(value) => `${value}%`} />
                               <Tooltip 
-                                formatter={(value, name) => [`${value}%`, name.charAt(0).toUpperCase() + name.slice(1)]}
+                                formatter={(value, name) => {
+                                  if (typeof name === 'string') {
+                                    return [value + '%', name.charAt(0).toUpperCase() + name.slice(1)];
+                                  }
+                                  return [value + '%', name];
+                                }}
                                 contentStyle={{ 
                                   background: "rgba(255, 255, 255, 0.9)",
                                   border: "none",
@@ -623,12 +637,15 @@ const Maturity = () => {
                               <YAxis />
                               <Tooltip 
                                 formatter={(value, name) => {
-                                  const readableName = name.replace(/([A-Z])/g, ' $1').trim()
-                                    .toLowerCase()
-                                    .split(' ')
-                                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                                    .join(' ');
-                                  return [value, readableName];
+                                  if (typeof name === 'string') {
+                                    const readableName = name.replace(/([A-Z])/g, ' $1').trim()
+                                      .toLowerCase()
+                                      .split(' ')
+                                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                                      .join(' ');
+                                    return [value, readableName];
+                                  }
+                                  return [value, String(name)];
                                 }}
                                 contentStyle={{ 
                                   background: "rgba(255, 255, 255, 0.9)",
