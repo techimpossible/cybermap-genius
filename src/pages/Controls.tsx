@@ -93,6 +93,7 @@ const Controls = () => {
                   <TabsTrigger value="implemented">Implemented</TabsTrigger>
                   <TabsTrigger value="in-progress">In Progress</TabsTrigger>
                   <TabsTrigger value="planned">Planned</TabsTrigger>
+                  <TabsTrigger value="not-implemented">Not Implemented</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="all" className="space-y-6">
@@ -145,6 +146,16 @@ const Controls = () => {
                   <div className="space-y-4">
                     {frameworkControls
                       .filter(control => control.status === "planned")
+                      .map(control => (
+                        <ControlScoreCard key={control.id} control={control} />
+                      ))}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="not-implemented" className="space-y-6">
+                  <div className="space-y-4">
+                    {frameworkControls
+                      .filter(control => control.status === "not-implemented")
                       .map(control => (
                         <ControlScoreCard key={control.id} control={control} />
                       ))}

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { cisControls } from "../data/cisControls";
@@ -11,7 +10,7 @@ export interface SecurityControl {
   nistMapping: string[];
   implementationLevel: "IG1" | "IG2" | "IG3";
   category: string;
-  status?: "implemented" | "in-progress" | "planned";
+  status?: "implemented" | "in-progress" | "planned" | "not-implemented";
   score?: number;
   notes?: string;
   framework: "CIS" | "NIST";
@@ -20,7 +19,7 @@ export interface SecurityControl {
 interface AssessmentContextType {
   controls: SecurityControl[];
   updateControlScore: (id: string, score: number) => void;
-  updateControlStatus: (id: string, status: "implemented" | "in-progress" | "planned") => void;
+  updateControlStatus: (id: string, status: "implemented" | "in-progress" | "planned" | "not-implemented") => void;
   updateControlNotes: (id: string, notes: string) => void;
   saveAssessment: () => void;
   loadAssessment: () => void;
@@ -56,7 +55,7 @@ export const AssessmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     );
   };
 
-  const updateControlStatus = (id: string, status: "implemented" | "in-progress" | "planned") => {
+  const updateControlStatus = (id: string, status: "implemented" | "in-progress" | "planned" | "not-implemented") => {
     setControls(prevControls => 
       prevControls.map(control => 
         control.id === id ? { ...control, status } : control
@@ -136,12 +135,14 @@ export const AssessmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const implemented = controls.filter(c => c.status === "implemented").length;
     const inProgress = controls.filter(c => c.status === "in-progress").length;
     const planned = controls.filter(c => c.status === "planned").length;
+    const notImplemented = controls.filter(c => c.status === "not-implemented").length;
     const total = controls.length;
 
     return [
       { name: "Implemented", value: Math.round((implemented / total) * 100), color: "#10b981" },
       { name: "In Progress", value: Math.round((inProgress / total) * 100), color: "#f59e0b" },
       { name: "Planned", value: Math.round((planned / total) * 100), color: "#3b82f6" },
+      { name: "Not Implemented", value: Math.round((notImplemented / total) * 100), color: "#ef4444" },
     ];
   };
 
