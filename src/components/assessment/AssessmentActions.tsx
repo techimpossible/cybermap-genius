@@ -1,8 +1,8 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useAssessment } from "@/contexts/AssessmentContext";
-import { Save, RefreshCw, Download, Upload } from "lucide-react";
+import { Save, RefreshCw, Download, Upload, FileText } from "lucide-react";
+import { exportToPDF } from "@/utils/pdfExport";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,7 +40,6 @@ const AssessmentActions = () => {
       try {
         const content = e.target?.result as string;
         const importedControls = JSON.parse(content);
-        // Validate the imported data (simple check)
         if (Array.isArray(importedControls) && importedControls.length > 0 && importedControls[0].id) {
           localStorage.setItem("securityControls", content);
           loadAssessment();
@@ -50,8 +49,17 @@ const AssessmentActions = () => {
       }
     };
     reader.readAsText(file);
-    // Reset the file input
     event.target.value = "";
+  };
+
+  const handlePdfExport = () => {
+    const { controls, getOverallScore, getImplementationGroupProgress, getControlsByStatus } = useAssessment();
+    exportToPDF(
+      controls, 
+      getOverallScore(), 
+      getImplementationGroupProgress(), 
+      getControlsByStatus()
+    );
   };
 
   return (
@@ -81,7 +89,7 @@ const AssessmentActions = () => {
       </AlertDialog>
       
       <Button variant="outline" size="sm" onClick={handleExport} className="flex items-center gap-1">
-        <Download className="h-4 w-4" /> Export
+        <Download className="h-4 w-4" /> Export JSON
       </Button>
       
       <Button variant="outline" size="sm" className="flex items-center gap-1" asChild>
@@ -94,6 +102,10 @@ const AssessmentActions = () => {
             onChange={handleImport}
           />
         </label>
+      </Button>
+
+      <Button variant="default" size="sm" onClick={handlePdfExport} className="flex items-center gap-1">
+        <FileText className="h-4 w-4" /> Export PDF Report
       </Button>
     </div>
   );
