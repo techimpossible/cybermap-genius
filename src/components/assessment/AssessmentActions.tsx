@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useAssessment } from "@/contexts/AssessmentContext";
@@ -16,7 +17,15 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const AssessmentActions = () => {
-  const { saveAssessment, loadAssessment, resetAssessment, controls } = useAssessment();
+  const { 
+    saveAssessment, 
+    loadAssessment, 
+    resetAssessment, 
+    controls, 
+    getOverallScore, 
+    getImplementationGroupProgress, 
+    getControlsByStatus 
+  } = useAssessment();
 
   const handleExport = () => {
     const data = JSON.stringify(controls, null, 2);
@@ -53,7 +62,6 @@ const AssessmentActions = () => {
   };
 
   const handlePdfExport = () => {
-    const { controls, getOverallScore, getImplementationGroupProgress, getControlsByStatus } = useAssessment();
     exportToPDF(
       controls, 
       getOverallScore(), 

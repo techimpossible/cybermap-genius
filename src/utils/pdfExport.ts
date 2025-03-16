@@ -3,7 +3,12 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { SecurityControl } from '@/contexts/AssessmentContext';
 
-export const exportToPDF = (controls: SecurityControl[], overallScore: number, implementationGroupProgress: any[], controlsByStatus: any[]) => {
+export const exportToPDF = (
+  controls: SecurityControl[], 
+  overallScore: number, 
+  implementationGroupProgress: { name: string; percentage: number; color: string }[], 
+  controlsByStatus: { name: string; value: number; color: string }[]
+) => {
   // Create a new PDF document
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
@@ -23,7 +28,9 @@ export const exportToPDF = (controls: SecurityControl[], overallScore: number, i
   doc.setTextColor(0, 0, 0);
   doc.text('Overall Assessment Score', 14, 40);
   doc.setFontSize(24);
-  doc.setTextColor(overallScore >= 3.5 ? 34, 139, 34 : overallScore >= 2 ? 255, 165, 0 : 220, 53, 69);
+  doc.setTextColor(overallScore >= 3.5 ? 34 : overallScore >= 2 ? 255 : 220, 
+                   overallScore >= 3.5 ? 139 : overallScore >= 2 ? 165 : 53, 
+                   overallScore >= 3.5 ? 34 : overallScore >= 2 ? 0 : 69);
   doc.text(`${overallScore}/5`, 14, 50);
   
   // Add summary metrics
