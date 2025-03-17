@@ -29,12 +29,13 @@ const Controls = () => {
   const { controls } = useAssessment();
   const [framework, setFramework] = useState<"CIS" | "NIST">("CIS");
   const [currentPage, setCurrentPage] = useState(1);
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const controlsPerPage = 10;
   
   // Filter controls by framework
   const frameworkControls = controls.filter(control => control.framework === framework);
 
-  // Group controls by category
+  // Group controls by category and sort categories alphabetically
   const controlsByGroup = frameworkControls.reduce<Record<string, typeof controls>>((acc, control) => {
     const category = control.category;
     if (!acc[category]) {
@@ -43,6 +44,13 @@ const Controls = () => {
     acc[category].push(control);
     return acc;
   }, {});
+
+  // Ensure all accordion items are expanded initially for All Controls tab
+  useEffect(() => {
+    // Get all category names
+    const allCategories = Object.keys(controlsByGroup);
+    setExpandedCategories(allCategories);
+  }, [controlsByGroup]);
 
   // For pagination on filtered tabs
   const [filteredControls, setFilteredControls] = useState(frameworkControls);
@@ -77,12 +85,25 @@ const Controls = () => {
       (activeTab === "all" ? frameworkControls : frameworkControls.filter(control => control.status === activeTab)).length / controlsPerPage
     ));
     setCurrentPage(1);
+
+    // Update expanded categories
+    const allCategories = Object.keys(controlsByGroup);
+    setExpandedCategories(allCategories);
   }, [framework, controls, activeTab]);
 
   // Get current controls for pagination
   const indexOfLastControl = currentPage * controlsPerPage;
   const indexOfFirstControl = indexOfLastControl - controlsPerPage;
   const currentControls = filteredControls.slice(indexOfFirstControl, indexOfLastControl);
+
+  // Toggle category expansion
+  const toggleCategory = (category: string) => {
+    setExpandedCategories(prev => 
+      prev.includes(category)
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
 
   return (
     <PageTransition>
@@ -104,6 +125,9 @@ const Controls = () => {
                   </Badge>
                   <Badge variant="outline" className="text-md py-2 px-4">
                     Controls: {frameworkControls.length}
+                  </Badge>
+                  <Badge variant="outline" className="text-md py-2 px-4">
+                    Domains: {Object.keys(controlsByGroup).length}
                   </Badge>
                 </div>
                 
@@ -147,28 +171,37 @@ const Controls = () => {
                 </TabsList>
 
                 <TabsContent value="all" className="space-y-6">
-                  <Accordion type="multiple" className="space-y-4">
-                    {Object.entries(controlsByGroup).map(([category, controls]) => (
-                      <AccordionItem 
-                        key={category} 
-                        value={category}
-                        className="border rounded-lg overflow-hidden shadow-sm"
-                      >
-                        <AccordionTrigger className="px-6 py-4 bg-gray-50 hover:bg-gray-100">
-                          <div className="flex items-center gap-3">
-                            <span className="font-medium text-lg">{category}</span>
-                            <Badge>{controls.length}</Badge>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-6 py-3">
-                          <div className="space-y-4">
-                            {controls.map(control => (
-                              <ControlScoreCard key={control.id} control={control} />
-                            ))}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
+                  <Accordion 
+                    type="multiple" 
+                    className="space-y-4"
+                    value={expandedCategories}
+                  >
+                    {Object.entries(controlsByGroup)
+                      .sort(([a], [b]) => a.localeCompare(b)) // Sort categories alphabetically
+                      .map(([category, categoryControls]) => (
+                        <AccordionItem 
+                          key={category} 
+                          value={category}
+                          className="border rounded-lg overflow-hidden shadow-sm"
+                        >
+                          <AccordionTrigger 
+                            className="px-6 py-4 bg-gray-50 hover:bg-gray-100"
+                            onClick={() => toggleCategory(category)}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="font-medium text-lg">{category}</span>
+                              <Badge>{categoryControls.length}</Badge>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="px-6 py-3">
+                            <div className="space-y-4">
+                              {categoryControls.map(control => (
+                                <ControlScoreCard key={control.id} control={control} />
+                              ))}
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
                   </Accordion>
                 </TabsContent>
 

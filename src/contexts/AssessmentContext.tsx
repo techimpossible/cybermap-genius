@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { cisControls } from "../data/cisControls";
@@ -31,19 +30,24 @@ interface AssessmentContextType {
   getControlsByStatus: () => { name: string; value: number; color: string }[];
 }
 
-// Combine the controls from both frameworks with default status
+// Verify all controls have default status and score
 const defaultControls = [
   ...cisControls.map(control => ({
     ...control,
     status: control.status || "planned" as const,
-    score: control.score || 0
+    score: typeof control.score === 'number' ? control.score : 0
   })),
   ...nistControls.map(control => ({
     ...control,
     status: control.status || "planned" as const,
-    score: control.score || 0
+    score: typeof control.score === 'number' ? control.score : 0
   }))
 ];
+
+// Verify we have all domains represented
+const cisCategories = [...new Set(cisControls.map(control => control.category))];
+console.log("CIS Categories count:", cisCategories.length);
+console.log("CIS Categories:", cisCategories);
 
 const AssessmentContext = createContext<AssessmentContextType | undefined>(undefined);
 
@@ -55,6 +59,15 @@ export const AssessmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   });
 
   useEffect(() => {
+    // Verify all controls are loaded properly
+    console.log("Total controls loaded:", controls.length);
+    console.log("CIS controls:", controls.filter(c => c.framework === "CIS").length);
+    console.log("NIST controls:", controls.filter(c => c.framework === "NIST").length);
+    
+    // Calculate unique categories
+    const cisCategories = [...new Set(controls.filter(c => c.framework === "CIS").map(c => c.category))];
+    console.log("CIS categories:", cisCategories.length);
+    
     // Save to localStorage whenever controls change
     localStorage.setItem("securityControls", JSON.stringify(controls));
   }, [controls]);
