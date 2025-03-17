@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -45,17 +44,17 @@ const Controls = () => {
     return acc;
   }, {});
 
+  // For pagination on filtered tabs
+  const [filteredControls, setFilteredControls] = useState(frameworkControls);
+  const [totalPages, setTotalPages] = useState(Math.ceil(filteredControls.length / controlsPerPage));
+  const [activeTab, setActiveTab] = useState("all");
+
   // Ensure all accordion items are expanded initially for All Controls tab
   useEffect(() => {
     // Get all category names
     const allCategories = Object.keys(controlsByGroup);
     setExpandedCategories(allCategories);
-  }, [controlsByGroup]);
-
-  // For pagination on filtered tabs
-  const [filteredControls, setFilteredControls] = useState(frameworkControls);
-  const [totalPages, setTotalPages] = useState(Math.ceil(filteredControls.length / controlsPerPage));
-  const [activeTab, setActiveTab] = useState("all");
+  }, [framework]);  // Only trigger when framework changes
 
   // Update filtered controls when tab changes
   const handleTabChange = (value: string) => {
@@ -85,10 +84,6 @@ const Controls = () => {
       (activeTab === "all" ? frameworkControls : frameworkControls.filter(control => control.status === activeTab)).length / controlsPerPage
     ));
     setCurrentPage(1);
-
-    // Update expanded categories
-    const allCategories = Object.keys(controlsByGroup);
-    setExpandedCategories(allCategories);
   }, [framework, controls, activeTab]);
 
   // Get current controls for pagination
@@ -104,6 +99,11 @@ const Controls = () => {
         : [...prev, category]
     );
   };
+
+  // Log for debugging
+  console.log("Domains count:", Object.keys(controlsByGroup).length);
+  console.log("Expanded categories:", expandedCategories);
+  console.log("Domain names:", Object.keys(controlsByGroup));
 
   return (
     <PageTransition>
@@ -186,7 +186,10 @@ const Controls = () => {
                         >
                           <AccordionTrigger 
                             className="px-6 py-4 bg-gray-50 hover:bg-gray-100"
-                            onClick={() => toggleCategory(category)}
+                            onClick={(e) => {
+                              e.preventDefault(); // Prevent default to avoid double toggling
+                              toggleCategory(category);
+                            }}
                           >
                             <div className="flex items-center gap-3">
                               <span className="font-medium text-lg">{category}</span>

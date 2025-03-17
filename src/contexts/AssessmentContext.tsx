@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { cisControls } from "../data/cisControls";
@@ -67,6 +68,7 @@ export const AssessmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     // Calculate unique categories
     const cisCategories = [...new Set(controls.filter(c => c.framework === "CIS").map(c => c.category))];
     console.log("CIS categories:", cisCategories.length);
+    console.log("CIS category names:", cisCategories);
     
     // Save to localStorage whenever controls change
     localStorage.setItem("securityControls", JSON.stringify(controls));
