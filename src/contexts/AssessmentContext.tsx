@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { cisControls } from "../data/cisControls";
@@ -30,8 +31,19 @@ interface AssessmentContextType {
   getControlsByStatus: () => { name: string; value: number; color: string }[];
 }
 
-// Combine the controls from both frameworks
-const defaultControls = [...cisControls, ...nistControls];
+// Combine the controls from both frameworks with default status
+const defaultControls = [
+  ...cisControls.map(control => ({
+    ...control,
+    status: control.status || "planned" as const,
+    score: control.score || 0
+  })),
+  ...nistControls.map(control => ({
+    ...control,
+    status: control.status || "planned" as const,
+    score: control.score || 0
+  }))
+];
 
 const AssessmentContext = createContext<AssessmentContextType | undefined>(undefined);
 

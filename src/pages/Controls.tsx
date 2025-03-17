@@ -11,6 +11,14 @@ import { useAssessment } from "@/contexts/AssessmentContext";
 import ControlScoreCard from "@/components/assessment/ControlScoreCard";
 import AssessmentActions from "@/components/assessment/AssessmentActions";
 import { Badge } from "@/components/ui/badge";
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
+} from "@/components/ui/pagination";
 
 const Controls = () => {
   useEffect(() => {
@@ -20,6 +28,8 @@ const Controls = () => {
 
   const { controls } = useAssessment();
   const [framework, setFramework] = useState<"CIS" | "NIST">("CIS");
+  const [currentPage, setCurrentPage] = useState(1);
+  const controlsPerPage = 10;
   
   // Filter controls by framework
   const frameworkControls = controls.filter(control => control.framework === framework);
@@ -33,6 +43,46 @@ const Controls = () => {
     acc[category].push(control);
     return acc;
   }, {});
+
+  // For pagination on filtered tabs
+  const [filteredControls, setFilteredControls] = useState(frameworkControls);
+  const [totalPages, setTotalPages] = useState(Math.ceil(filteredControls.length / controlsPerPage));
+  const [activeTab, setActiveTab] = useState("all");
+
+  // Update filtered controls when tab changes
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    setCurrentPage(1);
+    
+    let filtered;
+    if (value === "all") {
+      filtered = frameworkControls;
+    } else {
+      filtered = frameworkControls.filter(control => control.status === value);
+    }
+    
+    setFilteredControls(filtered);
+    setTotalPages(Math.ceil(filtered.length / controlsPerPage));
+  };
+
+  // Update when framework changes
+  useEffect(() => {
+    if (activeTab === "all") {
+      setFilteredControls(frameworkControls);
+    } else {
+      const filtered = frameworkControls.filter(control => control.status === activeTab);
+      setFilteredControls(filtered);
+    }
+    setTotalPages(Math.ceil(
+      (activeTab === "all" ? frameworkControls : frameworkControls.filter(control => control.status === activeTab)).length / controlsPerPage
+    ));
+    setCurrentPage(1);
+  }, [framework, controls, activeTab]);
+
+  // Get current controls for pagination
+  const indexOfLastControl = currentPage * controlsPerPage;
+  const indexOfFirstControl = indexOfLastControl - controlsPerPage;
+  const currentControls = filteredControls.slice(indexOfFirstControl, indexOfLastControl);
 
   return (
     <PageTransition>
@@ -87,7 +137,7 @@ const Controls = () => {
 
               <AssessmentActions />
 
-              <Tabs defaultValue="all">
+              <Tabs defaultValue="all" onValueChange={handleTabChange}>
                 <TabsList className="mb-6">
                   <TabsTrigger value="all">All Controls</TabsTrigger>
                   <TabsTrigger value="implemented">Implemented</TabsTrigger>
@@ -124,41 +174,157 @@ const Controls = () => {
 
                 <TabsContent value="implemented" className="space-y-6">
                   <div className="space-y-4">
-                    {frameworkControls
-                      .filter(control => control.status === "implemented")
-                      .map(control => (
-                        <ControlScoreCard key={control.id} control={control} />
-                      ))}
+                    {currentControls.map(control => (
+                      <ControlScoreCard key={control.id} control={control} />
+                    ))}
+                    
+                    {filteredControls.length > controlsPerPage && (
+                      <Pagination className="mt-6">
+                        <PaginationContent>
+                          <PaginationItem>
+                            <PaginationPrevious 
+                              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                            />
+                          </PaginationItem>
+                          
+                          {[...Array(totalPages)].map((_, i) => (
+                            <PaginationItem key={i + 1}>
+                              <PaginationLink 
+                                isActive={currentPage === i + 1}
+                                onClick={() => setCurrentPage(i + 1)}
+                              >
+                                {i + 1}
+                              </PaginationLink>
+                            </PaginationItem>
+                          )).slice(Math.max(0, currentPage - 3), Math.min(totalPages, currentPage + 2))}
+                          
+                          <PaginationItem>
+                            <PaginationNext 
+                              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                              className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                            />
+                          </PaginationItem>
+                        </PaginationContent>
+                      </Pagination>
+                    )}
                   </div>
                 </TabsContent>
 
                 <TabsContent value="in-progress" className="space-y-6">
                   <div className="space-y-4">
-                    {frameworkControls
-                      .filter(control => control.status === "in-progress")
-                      .map(control => (
-                        <ControlScoreCard key={control.id} control={control} />
-                      ))}
+                    {currentControls.map(control => (
+                      <ControlScoreCard key={control.id} control={control} />
+                    ))}
+                    
+                    {filteredControls.length > controlsPerPage && (
+                      <Pagination className="mt-6">
+                        <PaginationContent>
+                          <PaginationItem>
+                            <PaginationPrevious 
+                              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                            />
+                          </PaginationItem>
+                          
+                          {[...Array(totalPages)].map((_, i) => (
+                            <PaginationItem key={i + 1}>
+                              <PaginationLink 
+                                isActive={currentPage === i + 1}
+                                onClick={() => setCurrentPage(i + 1)}
+                              >
+                                {i + 1}
+                              </PaginationLink>
+                            </PaginationItem>
+                          )).slice(Math.max(0, currentPage - 3), Math.min(totalPages, currentPage + 2))}
+                          
+                          <PaginationItem>
+                            <PaginationNext 
+                              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                              className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                            />
+                          </PaginationItem>
+                        </PaginationContent>
+                      </Pagination>
+                    )}
                   </div>
                 </TabsContent>
 
                 <TabsContent value="planned" className="space-y-6">
                   <div className="space-y-4">
-                    {frameworkControls
-                      .filter(control => control.status === "planned")
-                      .map(control => (
-                        <ControlScoreCard key={control.id} control={control} />
-                      ))}
+                    {currentControls.map(control => (
+                      <ControlScoreCard key={control.id} control={control} />
+                    ))}
+                    
+                    {filteredControls.length > controlsPerPage && (
+                      <Pagination className="mt-6">
+                        <PaginationContent>
+                          <PaginationItem>
+                            <PaginationPrevious 
+                              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                            />
+                          </PaginationItem>
+                          
+                          {[...Array(totalPages)].map((_, i) => (
+                            <PaginationItem key={i + 1}>
+                              <PaginationLink 
+                                isActive={currentPage === i + 1}
+                                onClick={() => setCurrentPage(i + 1)}
+                              >
+                                {i + 1}
+                              </PaginationLink>
+                            </PaginationItem>
+                          )).slice(Math.max(0, currentPage - 3), Math.min(totalPages, currentPage + 2))}
+                          
+                          <PaginationItem>
+                            <PaginationNext 
+                              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                              className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                            />
+                          </PaginationItem>
+                        </PaginationContent>
+                      </Pagination>
+                    )}
                   </div>
                 </TabsContent>
 
                 <TabsContent value="not-implemented" className="space-y-6">
                   <div className="space-y-4">
-                    {frameworkControls
-                      .filter(control => control.status === "not-implemented")
-                      .map(control => (
-                        <ControlScoreCard key={control.id} control={control} />
-                      ))}
+                    {currentControls.map(control => (
+                      <ControlScoreCard key={control.id} control={control} />
+                    ))}
+                    
+                    {filteredControls.length > controlsPerPage && (
+                      <Pagination className="mt-6">
+                        <PaginationContent>
+                          <PaginationItem>
+                            <PaginationPrevious 
+                              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                            />
+                          </PaginationItem>
+                          
+                          {[...Array(totalPages)].map((_, i) => (
+                            <PaginationItem key={i + 1}>
+                              <PaginationLink 
+                                isActive={currentPage === i + 1}
+                                onClick={() => setCurrentPage(i + 1)}
+                              >
+                                {i + 1}
+                              </PaginationLink>
+                            </PaginationItem>
+                          )).slice(Math.max(0, currentPage - 3), Math.min(totalPages, currentPage + 2))}
+                          
+                          <PaginationItem>
+                            <PaginationNext 
+                              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                              className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                            />
+                          </PaginationItem>
+                        </PaginationContent>
+                      </Pagination>
+                    )}
                   </div>
                 </TabsContent>
               </Tabs>
